@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -13,10 +12,15 @@ import (
 
 func main() {
 
-	filePtr := flag.String("example", "defaultValue", " Help text.")
+	filePtr := flag.String("dir", ".", " Help text.")
 	flag.Parse()
-	fmt.Println("file opened:", *filePtr)
-	textToTemplate(*filePtr)
+	txtFiles := traverseFiles(*filePtr)
+	fmt.Println(txtFiles)
+	for _, file := range txtFiles {
+		textToTemplate(file)
+		fmt.Println("file opened:", file)
+	}
+
 }
 
 func readFile(filename string) string {
@@ -28,28 +32,25 @@ func readFile(filename string) string {
 	return string(fileContents)
 }
 
-func traverseFiles() {
-	directory := "."
-	files, err := ioutil.ReadDir(directory)
+func traverseFiles(dir string) []string {
+	files, err := ioutil.ReadDir(dir)
 
 	// var txtfiles []string
 	output := []string{}
-	if err != nil {
-		log.Fatal(err)
-	}
+	check(err)
 
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".txt" {
 			output = append(output, file.Name())
 		}
 	}
+	return output
 }
 
 func extractFileName(filename string) string {
 
 	var newFileName string
 	newFileName = strings.SplitAfter(filename, ".")[0]
-	fmt.Println(newFileName)
 	fileExt := "html"
 	fmt.Println(newFileName + fileExt)
 	return "./" + newFileName + fileExt
@@ -60,6 +61,7 @@ func textToTemplate(filename string) {
 	pathOut := extractFileName(filename)
 	tpl, err := template.ParseFiles("template.tmpl")
 	check(err)
+
 	type Content struct {
 		Contents string
 	}
@@ -68,14 +70,8 @@ func textToTemplate(filename string) {
 	}
 	f, err := os.Create(pathOut)
 	check(err)
-	// err = tpl.Execute(os.Stdout, content)
-
-	// bytesToWrite := []byte(fileContents)
-	print(content.Contents)
 	err = tpl.Execute(f, content)
 	check(err)
-	// err1 := ioutil.WriteFile(fileOut, []byte(content.Contents), 0644)
-	// check(err1)
 }
 
 func check(e error) {
