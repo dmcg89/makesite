@@ -26,8 +26,8 @@ func main() {
 	flag.Parse()
 	fmt.Println("file:", *filePtr)
 	// fmt.Println("file:", *filePtr)
-	var htmlTemplate string
-	htmlTemplate = textToTemplate(*filePtr)
+	// var htmlTemplate string
+	textToTemplate(*filePtr)
 
 	// fmt.Print(string("here \n"))
 	// fmt.Print(string(files))
@@ -92,7 +92,7 @@ func extractFileName(filename string) string {
 	fmt.Println(newFileName)
 	fileExt := "html"
 	fmt.Println(newFileName + fileExt)
-	return newFileName + fileExt
+	return "./" + newFileName + fileExt
 }
 
 func writeOut(fileOutName string, fileContents string) {
