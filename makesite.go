@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"text/template"
 )
 
@@ -21,15 +22,14 @@ import (
 
 func main() {
 
-	// fileContents := readFile("./first-post.txt")
-	// traverseFiles()
-	// filePtr := flag.String("example", "./first-post.txt", "enter a file name flag")
 	filePtr := flag.String("example", "defaultValue", " Help text.")
 	flag.Parse()
 	fmt.Println("file:", *filePtr)
 	// fmt.Println("file:", *filePtr)
-	writeOut(*filePtr)
-	fmt.Print(string("here \n"))
+	var htmlTemplate string
+	htmlTemplate = textToTemplate(*filePtr)
+
+	// fmt.Print(string("here \n"))
 	// fmt.Print(string(files))
 }
 
@@ -60,9 +60,6 @@ func traverseFiles() {
 			output = append(output, file.Name())
 		}
 	}
-	// fmt.Println(strings.Join(output, ", "))
-	// fmt.Printf(txtfiles)
-	// return output
 }
 
 // func main() {
@@ -88,11 +85,26 @@ func traverseFiles() {
 // 	}
 // }
 
-func writeOut(filename string) {
+func extractFileName(filename string) string {
+
+	var newFileName string
+	newFileName = strings.SplitAfter(filename, ".")[0]
+	fmt.Println(newFileName)
+	fileExt := "html"
+	fmt.Println(newFileName + fileExt)
+	return newFileName + fileExt
+}
+
+func writeOut(fileOutName string, fileContents string) {
+
+}
+
+func textToTemplate(filename string) {
 	// paths := []string{
 	// 	"template.tmpl",
 	// }
 	fileContents := readFile(filename)
+	fileOut := extractFileName(filename)
 	tpl, err := template.ParseFiles("template.tmpl")
 	if err != nil {
 		log.Fatalln(err)
@@ -103,7 +115,7 @@ func writeOut(filename string) {
 	content := Content{
 		Contents: string(fileContents),
 	}
-	// fmt.Printf(content.Contents)
+	fmt.Printf(content.Contents)
 	// err = tpl.Execute(os.Stdout, content)
 
 	// bytesToWrite := []byte(fileContents)
@@ -111,5 +123,12 @@ func writeOut(filename string) {
 	if err != nil {
 		panic(err)
 	}
+	err1 := ioutil.WriteFile(fileOut, []byte(content.Contents), 0644)
+	check(err1)
+}
 
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
