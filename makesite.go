@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -22,10 +23,14 @@ func main() {
 
 	// fileContents := readFile("./first-post.txt")
 	// traverseFiles()
+	// filePtr := flag.String("example", "./first-post.txt", "enter a file name flag")
+	filePtr := flag.String("example", "defaultValue", " Help text.")
+	flag.Parse()
+	fmt.Println("file:", *filePtr)
+	// fmt.Println("file:", *filePtr)
+	writeOut(*filePtr)
 	fmt.Print(string("here \n"))
 	// fmt.Print(string(files))
-	writeOut()
-
 }
 
 func readFile(filename string) string {
@@ -83,11 +88,11 @@ func traverseFiles() {
 // 	}
 // }
 
-func writeOut() {
+func writeOut(filename string) {
 	// paths := []string{
 	// 	"template.tmpl",
 	// }
-	fileContents := readFile("./first-post.txt")
+	fileContents := readFile(filename)
 	tpl, err := template.ParseFiles("template.tmpl")
 	if err != nil {
 		log.Fatalln(err)
