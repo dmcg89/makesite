@@ -57,7 +57,7 @@ func extractFileName(filename string) string {
 
 func textToTemplate(filename string) {
 	fileContents := readFile(filename)
-	fileOut := extractFileName(filename)
+	pathOut := extractFileName(filename)
 	tpl, err := template.ParseFiles("template.tmpl")
 	check(err)
 	type Content struct {
@@ -66,16 +66,16 @@ func textToTemplate(filename string) {
 	content := Content{
 		Contents: string(fileContents),
 	}
-	fmt.Printf(content.Contents)
+	f, err := os.Create(pathOut)
+	check(err)
 	// err = tpl.Execute(os.Stdout, content)
 
 	// bytesToWrite := []byte(fileContents)
-	err = tpl.Execute(os.Stdout, content)
-	if err != nil {
-		panic(err)
-	}
-	err1 := ioutil.WriteFile(fileOut, []byte(content.Contents), 0644)
-	check(err1)
+	print(content.Contents)
+	err = tpl.Execute(f, content)
+	check(err)
+	// err1 := ioutil.WriteFile(fileOut, []byte(content.Contents), 0644)
+	// check(err1)
 }
 
 func check(e error) {
