@@ -11,26 +11,12 @@ import (
 	"text/template"
 )
 
-// type Content struct {
-// 	content string
-// }
-
-// type Todo struct {
-// 	Name        string
-// 	Description string
-// }
-
 func main() {
 
 	filePtr := flag.String("example", "defaultValue", " Help text.")
 	flag.Parse()
-	fmt.Println("file:", *filePtr)
-	// fmt.Println("file:", *filePtr)
-	// var htmlTemplate string
+	fmt.Println("file opened:", *filePtr)
 	textToTemplate(*filePtr)
-
-	// fmt.Print(string("here \n"))
-	// fmt.Print(string(files))
 }
 
 func readFile(filename string) string {
@@ -43,8 +29,6 @@ func readFile(filename string) string {
 }
 
 func traverseFiles() {
-	// Return .txt files
-	// var i := 0 uint64
 	directory := "."
 	files, err := ioutil.ReadDir(directory)
 
@@ -56,34 +40,10 @@ func traverseFiles() {
 
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".txt" {
-			// output = append(txtfiles, file.Name())
 			output = append(output, file.Name())
 		}
 	}
 }
-
-// func main() {
-// 	// Files are provided as a slice of strings.
-// 	paths := []string{traverseFiles()}
-
-// 	// t := template.Must(template.New("html-tmpl").ParseFiles(paths...))
-// 	// err = t.Execute(os.Stdout, todos)
-// 	// if err != nil {
-// 	//   panic(err)
-// 	// }
-// }
-
-// func txtToTemplate(fileContents string) {
-// 	paths := []string{
-// 		"todo.tmpl",
-// 	}
-
-// 	t := template.Must(template.New("html-tmpl").ParseFiles(paths...))
-// 	err = t.Execute(os.Stdout, todos)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// }
 
 func extractFileName(filename string) string {
 
@@ -95,20 +55,11 @@ func extractFileName(filename string) string {
 	return "./" + newFileName + fileExt
 }
 
-func writeOut(fileOutName string, fileContents string) {
-
-}
-
 func textToTemplate(filename string) {
-	// paths := []string{
-	// 	"template.tmpl",
-	// }
 	fileContents := readFile(filename)
 	fileOut := extractFileName(filename)
 	tpl, err := template.ParseFiles("template.tmpl")
-	if err != nil {
-		log.Fatalln(err)
-	}
+	check(err)
 	type Content struct {
 		Contents string
 	}
