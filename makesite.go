@@ -33,6 +33,7 @@ func main() {
 	}
 
 	http.Handle("/", http.FileServer(http.Dir("./static/views")))
+	fmt.Println("Preparing to listen on port 8081...")
 	log.Fatal(http.ListenAndServe(":8081", nil))
 
 }
@@ -64,12 +65,8 @@ func traverseFiles(dir string) []string {
 
 func extractFileName(filename string) string {
 	fileExt := "html"
-	fmt.Println(filename + fileExt)
 	outfile := strings.Split(filename, "/")
 	outfile = (strings.Split(outfile[len(outfile)-1], "."))
-	fmt.Println("here")
-	fmt.Println(outfile[0])
-	fmt.Println("here")
 	return "./static/views/" + outfile[0] + "." + fileExt
 }
 
